@@ -76,21 +76,19 @@ public class VDangky {
 		JButton btnDky = new JButton("Dang ky");
 		btnDky.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String a=txtUsername.getText();
-				String b=txtPassword.getText(); 
-				
-				if(a.equals("")||b.equals(""))
+
+				if(txtUsername.getText().equals("")||txtPassword.getText().equals(""))
 					JOptionPane.showMessageDialog(null, "Please complete the information section");
 				else
 				{
 					Object[] data = new Object[2];
-					data[0]=a;
-					data[1]=b;
+					data[0]=txtUsername.getText();
+					data[1]=txtPassword.getText();
 					try {
 						CDangky.insert( data);
 						frame.setVisible(false);
 						frame.dispose(); //Destroy the JFrame object	
-						JOptionPane.showMessageDialog(null, "You have successfully entered");
+						JOptionPane.showMessageDialog(null, "You have successfully registered");
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

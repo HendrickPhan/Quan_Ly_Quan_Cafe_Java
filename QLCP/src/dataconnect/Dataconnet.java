@@ -12,15 +12,11 @@ public class Dataconnet {
 	}
 	
 	public static void insert(String table, String[] arrcolumn, Object[] data, String[] datatype) throws ClassNotFoundException, SQLException {
-		String s;
-		int in;
 		Connection con=connet();
-		 	int n=arrcolumn.length;
-			Statement stmt=con.createStatement();  
-			ResultSet rs=stmt.executeQuery("select * from tkhoan");  
+		 	int n=data.length;
 			String mysql = " insert into ";
 			mysql+=table+" (";
-			for(int i=0;i<2;i++)
+			for(int i=0;i<n;i++)
 			{
 				if(i==n-1)
 					mysql+=arrcolumn[i]+")";
@@ -28,7 +24,7 @@ public class Dataconnet {
 					mysql+=arrcolumn[i]+",";
 			}
 			mysql+=" values (";
-			for(int i=0;i<2;i++)
+			for(int i=0;i<n;i++)
 			{
 				if(i==n-1)
 					mysql+="?)";
@@ -36,24 +32,21 @@ public class Dataconnet {
 					mysql+="?,";
 			}
 			PreparedStatement preparedStmt = con.prepareStatement(mysql);
-			for(int i=0;i<2;i++)
+			for(int i=0;i<n;i++)
 			{
 				if(datatype[i]=="string")
 				{
-					s=(String) data[i];
-					preparedStmt.setString (i+1, s);
+					preparedStmt.setString (i+1, (String) data[i]);
 				}
 				if(datatype[i]=="int")
 				{
-					in=(int) data[i];
-					preparedStmt.setInt (i+1, in);
+					preparedStmt.setInt (i+1, (int) data[i]);
 				}
 			}
 			if( preparedStmt.executeUpdate() != 0) {
-				System.err.println("insert thanh cong account");
+				System.err.println("insert thanh cong ");
 			}
-			while(rs.next())  
-			System.out.println(rs.getString(1)+"  "+rs.getString(2)+"  ");  
+
 			con.close();  
 	}
 	
@@ -71,5 +64,16 @@ public class Dataconnet {
 		}
 		else
 			JOptionPane.showMessageDialog(null, "Login failed");
+		con.close();
+	}
+
+	public static int getID(String table, String column) throws SQLException, ClassNotFoundException {
+		// TODO Auto-generated method stub
+		Connection con=connet();
+		Statement stmt=con.createStatement();  
+		ResultSet rs=stmt.executeQuery("select * from "+table+" WHERE "+column+"=(select max("+column+") from "+table+")");  
+		if(rs.next()==false)
+			return 0;
+		return rs.getInt(1)+1;
 	}
 }
